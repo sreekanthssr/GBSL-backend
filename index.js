@@ -17,7 +17,7 @@ app.post('/', (req, res) => {
 app.get('/', (req, res) => {
     res.status(404).send('');
 });
-/*To register the user*/
+
 app.post('/registerUser', (req, res) => {
     console.log(req.body);
     res.status(200).send({statusCode: 200, statusText: "Registration Completed"});
