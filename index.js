@@ -22,10 +22,12 @@ app.post('/', (req, res) => {
 app.get('/', (req, res) => {
     res.status(200).send('test');
 });
+
 /**
  * Status code 
  * 1- success, 2 - error, 3- warning, 4- info
  */
+
 
 const userControllerObj = new userController(app);
 
