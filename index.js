@@ -3,8 +3,13 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+const userModal =  require( './modals/user-modal.js');
+
+
+let userModalObj = new userModal();
+
+app.use( bodyParser.json() ); 
+app.use(bodyParser.urlencoded({
   extended: true
 })); 
 
@@ -15,12 +20,23 @@ app.post('/', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.status(404).send('');
+    res.status(200).send('test');
 });
-/*To register the user*/
-app.post('/registerUser', (req, res) => {
-    console.log(req.body);
-    res.status(200).send({statusCode: 200, statusText: "Registration Completed"});
+/**
+ * Status code 
+ * 1- success, 2 - error, 3- warning, 4- info
+ */
+app.post('/register-user', (req, res) => {
+    let params = req.body;
+    let userObject = {...req.body};
+    let response = {statusCode: 3, statusText: "User details already exists"};
+
+    let result = userModalObj.addUser(userObject);
+
+    if(result && result !== undefined){
+        response = {statusCode: 1, statusText: "Registration Completed"}
+    }
+    res.status(200).send(response);
 });
 
 
