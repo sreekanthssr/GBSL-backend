@@ -48,14 +48,16 @@ module.exports = class mainModal {
     }
 
     find(query){
+        let result = null;
         try{
             if(query && this.collection){
+                
                 switch(true){
                     case !isNaN(query):
-                        this.collection.get(query);
+                    result = this.collection.get(query);
                         break;
                     default:
-                        this.collection.find(query);
+                    result = this.collection.find(query);
                 }
             }else {
                 throw Error("Query or collection missing  in main-modal find function");
@@ -63,6 +65,7 @@ module.exports = class mainModal {
         } catch(error){
             customError.handleError(error);
         }
+        return result;
     }
 
     update(query, updateCallBack){        
