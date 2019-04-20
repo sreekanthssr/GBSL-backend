@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-const userController =  require( './controllers/user.js');
+const userController =  require( './controllers/user-controller.js');
 
 
 
@@ -20,7 +20,7 @@ app.post('/', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.status(200).send('test');
+    res.status(404).send('');
 });
 
 /**

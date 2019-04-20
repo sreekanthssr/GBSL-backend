@@ -12,7 +12,7 @@ module.exports = class userController{
         this.app.post('/register-user', (req, res) => {
             let params = req.body;
             let userObject = {...req.body};            
-            let result = this.userModalObj.addUser(userObject);           
+            let result = this.userModalObj.add(userObject);           
             res.status(200).send(result);
         });
     }
@@ -21,7 +21,7 @@ module.exports = class userController{
         this.app.get('/check-user-exists/:params', (req, res) => {
             let userObject = JSON.parse(decodeURI( req.params.params));
 
-            let result = this.userModalObj.checkUserExists(userObject);
+            let result = this.userModalObj.checkExists(userObject);
         
             res.status(200).send(result);
         });

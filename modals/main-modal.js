@@ -7,10 +7,10 @@ const lokiIndexedAdapter = require('../node_modules/lokijs/src/loki-indexed-adap
 
 
 module.exports = class mainModal {
-    constructor(dbName,collectionName, collectionOption){
+    constructor(dbName,collectionName, collectionOption, fieldList){
         this.dbName = dbName;
         this.collectionName = collectionName;
-
+        this.fieldList = fieldList;
         this._createDB(collectionOption);
         
     }
@@ -32,19 +32,72 @@ module.exports = class mainModal {
             }
         });
     }
-
+    /**
+     * 
+     * @param {*} object {filed: 'name', mandatory: true, defaultValue : '', validationType : ''},
+     * @param {*} and 
+     */
+    _checkFields(object, and){         
+        try{
+            let checkFlag = true;
+            this.fieldList.forEach((fieldObj)=>{
+                if(and ){
+                    if(fieldObj.mandatory === true){
+                        if(object[fieldObj.filed] ){
+                            /**Type validation comes here */
+                        }
+                        else {
+                            checkFlag = false;
+                            return;
+                        }
+                    }                
+                } 
+                else{
+                    if(object[fieldObj.filed]){
+                        checkFlag = true;
+                        return;
+                    }
+                } 
+                
+            });
+            return checkFlag;
+        } catch(error){
+            customError.handleError(error);
+        }
+        return false;
+    } 
+    _prepareData(data){
+        try{
+            this.fieldList.forEach((fieldObj)=>{
+                if(data[fieldObj.filed]){}
+                else if(fieldObj.defaultValue !== undefined){
+                    data[fieldObj.filed] = fieldObj.defaultValue;
+                }
+            });
+            return data;
+        }catch(error){
+            customError.handleError(error);
+        }
+        return false;
+    }
     insert(data){
         try{
             if(data && this.collection){
-                let result = (this.collection.insert(data));
-                this.db.saveDatabase();
-                return result;
+                data = this._prepareData(data);
+                if(data){
+                    let result = (this.collection.insert(data));
+                    this.db.saveDatabase();
+                    return result;
+                }else {
+                    throw Error("Data not correct in main-modal insert function");  
+                }                
             } else {
                 throw Error("Data or collection missing in main-modal insert function");
             }
         } catch(error){
             customError.handleError(error);
-        }        
+        } 
+        return false;       
     }
 
     find(query){
